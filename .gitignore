@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# 虚拟环境
+venv/
+.venv/
+env/
+.env
+
+# 模型文件（体积大，用 Git LFS 或单独管理）
+*.pt
+*.pth
+*.onnx
+*.engine
+*.trt
+
+# 数据集 & 临时结果
+runs/
+*.jpg
+*.jpeg
+*.png
+*.mp4
+*.avi
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Docker
+.dockerignore
+
+# 日志
+*.log

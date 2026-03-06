@@ -1,0 +1,76 @@
+# ============================================================
+# docker-compose.yml — YOLOv5 云台追踪系统
+# ============================================================
+# 运行前准备（创建 .env 文件或 export 环境变量）：
+#   YOLOV5_DIR=/path/to/yolov5     # YOLOv5 仓库路径
+#   MODEL_PT=/path/to/best2.pt     # 模型权重路径
+#   BEEP_DIR=/path/to/scripts      # 蜂鸣器脚本目录
+#   DISPLAY=:0                     # X11 显示（cv2.imshow）
+# 启动: docker compose up --build
+# ============================================================
+
+version: "3.9"
+
+services:
+  gimbal-tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # 构建时走宿主机 7897 代理（仅影响 apt/pip）
+        HTTP_PROXY: "http://host.docker.internal:7897"
+        HTTPS_PROXY: "http://host.docker.internal:7897"
+    image: gimbal-tracker:latest
+    container_name: gimbal-tracker
+
+    # ── 硬件权限 ───────────────────────────────────────────
+    devices:
+      - /dev/video0:/dev/video0 # USB 摄像头
+      - /dev/i2c-1:/dev/i2c-1 # I2C 总线（ServoKit，Jetson 改成 i2c-7）
+      # - /dev/i2c-7:/dev/i2c-7       # Jetson Orin 追加
+    group_add:
+      - video
+      - i2c
+
+    # ── 挂载（模型、YOLOv5 仓库、X11、日志）─────────────────
+    volumes:
+      # X11 socket（cv2.imshow 需要）
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-~/.Xauthority}:/root/.Xauthority:ro
+      # YOLOv5 仓库 → config.YOLOV5_REPO_PATH
+      - ${YOLOV5_DIR:-/home/zan/yolov5}:/opt/yolov5:ro
+      # 模型权重 → config.MODEL_PT_PATH
+      - ${MODEL_PT:-/home/zan/models/best2.pt}:/app/models/best2.pt:ro
+      # 蜂鸣器脚本 → config.BEEP_SCRIPT_PATH
+      - ${BEEP_DIR:-/home/zan/scripts}:/app/scripts:ro
+      # 日志输出
+      - ./logs:/app/logs
+
+    # ── 环境变量 ────────────────────────────────────────────
+    environment:
+      # 运行时不走代理（构建期已完成下载）
+      http_proxy: ""
+      https_proxy: ""
+      no_proxy: ""
+      # 如需运行时访问外网，取消以下注释：
+      # http_proxy: "http://host.docker.internal:7897"
+      # https_proxy: "http://host.docker.internal:7897"
+      DISPLAY: "${DISPLAY:-:0}"
+      QT_X11_NO_MITSHM: "1"
+
+    # ── GPU（NVIDIA Container Toolkit，可选）────────────────
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+    # ── 网络：host-gateway 让容器能访问宿主机 7897 ──────────
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
