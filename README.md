@@ -4,9 +4,6 @@
 > **核心组件**: PCA9685A 驱动舵机、12mm 长焦摄像头  
 > **软件架构**: 包含原始代码 (224.py) 及 Claude 分块优化版本
 
-<img width="1157" height="1157" alt="image" src="https://github.com/user-attachments/assets/121d1c7b-e952-443a-a5c1-ba97f174f48f" />
-<img width="2366" height="1305" alt="image" src="https://github.com/user-attachments/assets/45ba5d87-509d-4858-b25b-737ca382dc49" />
-<img width="2366" height="1305" alt="image" src="https://github.com/user-attachments/assets/dac564e3-e907-4c05-97e2-df104101bc8c" />
 
 ---
 
