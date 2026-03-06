@@ -1,5 +1,5 @@
 <h1>🏆 这是2025年全国大学生光电设计竞赛 赛题A “激光对抗小车”的代码</h1>
-<p><h3>文件224,为可完整运行的原始代码 后面7个python文件为claude 分块优化后的代码，一并附上。</h3></p>
+<p><h3>文件224.py为可完整运行的原始代码 后面7个python文件为claude 分块优化后的代码，一并附上。</h3></p>
 <p><h3>硬件平台为 jetson orin PWM舵机由 PCA9685A驱动 视觉采集设备为 12mm长焦摄像头</h3></p>
 
 <img width="1157" height="1157" alt="image" src="https://github.com/user-attachments/assets/121d1c7b-e952-443a-a5c1-ba97f174f48f" />
